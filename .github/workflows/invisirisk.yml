@@ -29,11 +29,11 @@ jobs:
           git config user.email "paras.oli@invisirisk.com"
       - name: Add upstream and sync fork
         run: |
-          git remote add upstream https://github.com/portainer/portainer.git
+          git remote add upstream https://github.com/jupyterlab/jupyterlab.git
           git fetch upstream
-          git checkout develop
-          git merge upstream/develop --no-edit
-          git push https://x-access-token:${{ secrets.MY_PAT }}@github.com/ir-paras-oli/portainer develop
+          git checkout main
+          git merge upstream/main --no-edit
+          git push https://x-access-token:${{ secrets.MY_PAT }}@github.com/ir-paras-oli/jupyterlab main
       - name: Setup PSE
         uses: invisirisk/pse-action@latest
         with:
