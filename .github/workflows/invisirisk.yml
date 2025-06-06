@@ -2,7 +2,7 @@ name: jupyterlab x InvisiRisk
 
 on:
   schedule:
-    - cron: '35 3 * * *'  # Runs daily at 9:20 AM Nepal Time
+    - cron: '10 0 * * 1'  # every Monday morning
   workflow_dispatch:
 
 permissions:
