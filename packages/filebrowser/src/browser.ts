@@ -126,7 +126,8 @@ export class FileBrowser extends SidePanel {
       model,
       renderer,
       translator,
-      state: options.state
+      state: options.state,
+      handleOpenFile: options.handleOpenFile
     });
     this.listing.addClass(LISTING_CLASS);
     this.listing.selectionChanged.connect(() => {
@@ -297,6 +298,23 @@ export class FileBrowser extends SidePanel {
   }
 
   /**
+   * Whether to allow upload of files.
+   */
+  get allowFileUploads(): boolean {
+    return this._allowFileUploads;
+  }
+
+  set allowFileUploads(value: boolean) {
+    this.model.allowFileUploads = value;
+    if (this.listing.setAllowDragDropUpload) {
+      this.listing.setAllowDragDropUpload(value);
+      this._allowFileUploads = value;
+    } else {
+      console.warn('Listing does not support setting upload');
+    }
+  }
+
+  /**
    * Create an iterator over the listing's selected items.
    *
    * @returns A new iterator over the listing's selected items.
@@ -434,6 +452,13 @@ export class FileBrowser extends SidePanel {
   }
 
   /**
+   * Select all listing items.
+   */
+  selectAll(): Promise<void> {
+    return this.listing.selectAll();
+  }
+
+  /**
    * Download the currently selected item(s).
    */
   download(): Promise<void> {
@@ -550,6 +575,7 @@ export class FileBrowser extends SidePanel {
   private _showHiddenFiles: boolean = false;
   private _showLastModifiedColumn: boolean = true;
   private _sortNotebooksFirst: boolean = false;
+  private _allowFileUploads: boolean = true;
   private _selectionChanged = new Signal<this, void>(this);
 }
 
@@ -598,6 +624,12 @@ export namespace FileBrowser {
      * the columns sizes
      */
     state?: IStateDB;
+
+    /**
+     * Callback overriding action performed when user asks to open a file.
+     * The default is to open the file in the main area if it is not open already, or to reveal it otherwise.
+     */
+    handleOpenFile?: (path: string) => void;
   }
 
   /**
